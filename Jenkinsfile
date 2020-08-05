@@ -19,24 +19,21 @@ pipeline {
          git 'https://github.com/' + githuburl
       }
     }
-    stage('Code Quality Check via SonarQube') {
-    steps {
-       script {
-       def scannerHome = tool 'sonar-scanner-4.3.0.2102-linux';
-           withSonarQubeEnv("Sonarqube-Community") {
-           sh "${tool("sonarqube")}/bin/sonar-scanner \
-           -Dsonar.projectKey=chitchat-pipeline \
-           -Dsonar.sources=. \
-           -Dsonar.css.node=. \
-           -Dsonar.host.url=http://10.8.3.93:9001 \
-           -Dsonar.login=b61a3753ccc72e9ccf41fa126ebc990e6dcf63f2"
-
-               }
-
-            }
-
+  stage('Code Quality Check via SonarQube') {
+    environment {
+      SCANNER_HOME = tool 'sonar-scanner-4.3.0.2102-linux'
+      PROJECT_NAME = "igorstojanovski_jenkins-pipeline-as-code"
+  }
+  steps {
+    withSonarQubeEnv('Sonarqube-Community') {
+        sh '''$SCANNER_HOME/bin/sonar-scanner  \
+        -Dsonar.projectKey=$PROJECT_NAME \
+        -Dsonar.sources=. \
+        -Dsonar.css.node=. \
+        -Dsonar.host.url=http://10.8.3.93:9001 \
+        -Dsonar.login=b61a3753ccc72e9ccf41fa126ebc990e6dcf63f2
         }
-
+      }
     }
     stage('Install dependencies') {
       steps {
