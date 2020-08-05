@@ -19,7 +19,25 @@ pipeline {
          git 'https://github.com/' + githuburl
       }
     }
+    stage('Code Quality Check via SonarQube') {
+    steps {
+       script {
+       def scannerHome = tool 'sonar-scanner-4.3.0.2102-linux';
+           withSonarQubeEnv("Sonarqube-Community") {
+           sh "${tool("sonarqube")}/bin/sonar-scanner \
+           -Dsonar.projectKey=chitchat-pipeline \
+           -Dsonar.sources=. \
+           -Dsonar.css.node=. \
+           -Dsonar.host.url=http://10.8.3.93:9001 \
+           -Dsonar.login=b61a3753ccc72e9ccf41fa126ebc990e6dcf63f2
 
+               }
+
+            }
+
+        }
+
+    }
     stage('Install dependencies') {
       steps {
         sh 'npm install'
@@ -62,14 +80,4 @@ pipeline {
       }
     }
 
-    stage('Deploy k8s') {
-      steps {
-        kubernetesDeploy(
-          kubeconfigId: 'f065d458-31b9-4650-9b40-d1845fbf2c47',
-          configs: 'k8s.yaml',
-          enableConfigSubstitution: true
-        )
-      }
-    }
-  }
-}
+
