@@ -3,7 +3,7 @@ pipeline {
   environment {
     dockerregistry = 'https://registry.hub.docker.com'
     dockerhuburl = 'novanovn/chitchat'
-    githuburl = 'novanovn/chitchat'
+    githuburl = 'novanovn/chitchat-pipeline'
     dockerhubcrd = '94992ee7-67a1-4a48-8086-d9a1d2d1ddb3'
     dockerImage = ''
   }
@@ -78,15 +78,3 @@ pipeline {
         sh "docker rmi $dockerhuburl:$BUILD_NUMBER"
       }
     }
-
-    stage('Deploy k8s') {
-      steps {
-        kubernetesDeploy(
-          kubeconfigId: 'f065d458-31b9-4650-9b40-d1845fbf2c47',
-          configs: 'k8s.yaml',
-          enableConfigSubstitution: true
-        )
-      }
-    }
-  }
-}
