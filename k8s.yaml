@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chitchat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chitchat
+  template:
+    metadata:
+      labels:
+        app: chitchat
+    spec:
+      containers:
+      - name: chitchat
+        image: $dockerhuburl:$BUILD_NUMBER
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 10.96.0.10
+        searches:
+          - default.svc.cluster.local
+          - svc.cluster.local
+          - cluster.local
+        options:
+          - name: ndots
+            value: "5"
+      imagePullSecrets:
+        - name: registrypullsecret-ilcs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chitchat-svc
+spec:
+  selector:
+    app: chitchat
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 4141
+      nodePort: 30005
+  type: LoadBalancer

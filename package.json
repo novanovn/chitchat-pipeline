@@ -1,0 +1,20 @@
+{
+  "name": "chitchat",
+  "version": "1.0.0",
+  "description": "A simple chat program",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha -R spec test/test.js --exit"
+  },
+  "author": "Kliment Andreev",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
+}
