@@ -78,3 +78,5 @@ pipeline {
         sh "docker rmi $dockerhuburl:$BUILD_NUMBER"
       }
     }
+  }
+}
